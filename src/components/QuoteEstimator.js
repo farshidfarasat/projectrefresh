@@ -126,23 +126,27 @@ export default function QuoteEstimator() {
                   { 
                     name: "Refresh", 
                     price: "£1,450+", 
-                    desc: "Basic painting of walls. Minimal prep.",
+                    desc: "Standard emulsion, minor filling, 2 coats. Perfect for rental updates.",
                     features: [
                       "Light surface clean",
                       "Removal of loose/flaky paint",
-                      "Minor crack filling",
-                      "Small hole filling (up to 1 inch)",
+                      "Minor crack filling (hairline cracks)",
+                      "Small hole filling up to 1 inch",
                       "2 coats of paint on walls"
                     ]
                   },
                   { 
                     name: "Enhanced", 
                     price: "£2,800+", 
-                    desc: "Full prep, woodwork, and premium paint. POPULAR",
+                    desc: "Premium Farrow & Ball paint, wood prep, satin finish trim. POPULAR",
                     features: [
-                      "Everything in Refresh, plus:",
-                      "Medium hole repairs (up to 2-4 inches)",
-                      "Stain treatment",
+                      "Light surface clean",
+                      "Removal of loose/flaky paint",
+                      "Minor crack filling",
+                      "Small hole filling up to 1 inch",
+                      "2 coats of paint on walls",
+                      "Medium hole repairs up to 2-4 inches",
+                      "Stain treatment where needed",
                       "Undercoat/primer where required",
                       "Colour change included"
                     ]
@@ -150,10 +154,18 @@ export default function QuoteEstimator() {
                   { 
                     name: "Premium", 
                     price: "£4,900+", 
-                    desc: "Extensive restoration, heritage details, F&B paint.",
+                    desc: "Full wall stripping, restorative plastering, heritage detail work.",
                     features: [
-                      "Everything in Enhanced, plus:",
-                      "Large hole repairs (over 4 inches)",
+                      "Light surface clean",
+                      "Removal of loose/flaky paint",
+                      "Minor crack filling",
+                      "Small hole filling up to 1 inch",
+                      "2 coats of paint on walls",
+                      "Medium hole repairs up to 2-4 inches",
+                      "Stain treatment",
+                      "Undercoat/primer",
+                      "Colour change included",
+                      "Large hole repairs over 4 inches",
                       "Skimming for smooth surfaces",
                       "Plastering where required",
                       "Wallpaper removal",
@@ -171,15 +183,22 @@ export default function QuoteEstimator() {
                   >
                     <div className="font-bold text-on-surface">{name}</div>
                     <div className="text-sm font-semibold text-secondary mt-1">{price}</div>
-                    <div className="text-sm text-on-surface-variant mt-2 mb-4">{desc}</div>
-                    <ul className="space-y-2">
-                      {features.map((feature, i) => (
-                        <li key={i} className="flex gap-2 text-xs text-on-surface-variant items-start">
-                          <span className="text-green-600 font-bold shrink-0">✓</span>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="text-sm text-on-surface-variant mt-2">{desc}</div>
+                    
+                    <div className={`grid transition-all duration-300 ease-in-out ${pkg === name ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                      <div className="overflow-hidden">
+                        <div className="mt-4 pt-4 border-t border-outline-variant">
+                          <ul className="space-y-2">
+                            {features.map((feature, i) => (
+                              <li key={i} className="flex gap-2 text-xs text-on-surface-variant items-start">
+                                <span className="text-green-600 font-bold shrink-0">✓</span>
+                                <span>{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
