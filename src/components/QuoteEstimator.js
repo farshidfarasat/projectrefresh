@@ -13,7 +13,7 @@ const pricingData = {
 
 const addOnPrices = {
   "Ceiling Painting": 350,
-  "Door & Frame Refurb": 120,
+  "Door and Frame Refurb": 120,
   "Radiator Enamelling": 85,
   "Window Cill Restoration": 45
 };
@@ -22,10 +22,18 @@ export default function QuoteEstimator() {
   const [propertyType, setPropertyType] = useState("Flat");
   const [size, setSize] = useState("1-2 Bed");
   const [pkg, setPkg] = useState("Enhanced");
-  const [addOns, setAddOns] = useState({});
+  const [addOns, setAddOns] = useState({
+    "Ceiling Painting": 0,
+    "Door and Frame Refurb": 0,
+    "Radiator Enamelling": 0,
+    "Window Cill Restoration": 0
+  });
 
-  const toggleAddOn = (name) => {
-    setAddOns(prev => ({ ...prev, [name]: !prev[name] }));
+  const updateAddOn = (name, delta) => {
+    setAddOns(prev => ({
+      ...prev,
+      [name]: Math.max(0, (prev[name] || 0) + delta)
+    }));
   };
 
   const calculateTotal = () => {
@@ -40,8 +48,8 @@ export default function QuoteEstimator() {
     }
 
     let adds = 0;
-    Object.entries(addOns).forEach(([name, selected]) => {
-      if (selected) adds += addOnPrices[name];
+    Object.entries(addOns).forEach(([name, qty]) => {
+      if (qty > 0) adds += addOnPrices[name] * qty;
     });
 
     return base + adds;
@@ -115,10 +123,46 @@ export default function QuoteEstimator() {
               <h3 className="font-manrope font-semibold text-body-lg mb-4">Step 3: Service Package</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
-                  { name: "Refresh", price: "£1,450+", desc: "Basic painting of walls. Minimal prep." },
-                  { name: "Enhanced", price: "£2,800+", desc: "Full prep, woodwork, and premium paint. POPULAR" },
-                  { name: "Premium", price: "£4,900+", desc: "Extensive restoration, heritage details, F&B paint." }
-                ].map(({ name, price, desc }) => (
+                  { 
+                    name: "Refresh", 
+                    price: "£1,450+", 
+                    desc: "Basic painting of walls. Minimal prep.",
+                    features: [
+                      "Light surface clean",
+                      "Removal of loose/flaky paint",
+                      "Minor crack filling",
+                      "Small hole filling (up to 1 inch)",
+                      "2 coats of paint on walls"
+                    ]
+                  },
+                  { 
+                    name: "Enhanced", 
+                    price: "£2,800+", 
+                    desc: "Full prep, woodwork, and premium paint. POPULAR",
+                    features: [
+                      "Everything in Refresh, plus:",
+                      "Medium hole repairs (up to 2-4 inches)",
+                      "Stain treatment",
+                      "Undercoat/primer where required",
+                      "Colour change included"
+                    ]
+                  },
+                  { 
+                    name: "Premium", 
+                    price: "£4,900+", 
+                    desc: "Extensive restoration, heritage details, F&B paint.",
+                    features: [
+                      "Everything in Enhanced, plus:",
+                      "Large hole repairs (over 4 inches)",
+                      "Skimming for smooth surfaces",
+                      "Plastering where required",
+                      "Wallpaper removal",
+                      "High quality finish",
+                      "Full surface preparation throughout",
+                      "Premium Finish Guarantee"
+                    ]
+                  }
+                ].map(({ name, price, desc, features }) => (
                   <button
                     key={name}
                     onClick={() => setPkg(name)}
@@ -127,7 +171,15 @@ export default function QuoteEstimator() {
                   >
                     <div className="font-bold text-on-surface">{name}</div>
                     <div className="text-sm font-semibold text-secondary mt-1">{price}</div>
-                    <div className="text-sm text-on-surface-variant mt-2">{desc}</div>
+                    <div className="text-sm text-on-surface-variant mt-2 mb-4">{desc}</div>
+                    <ul className="space-y-2">
+                      {features.map((feature, i) => (
+                        <li key={i} className="flex gap-2 text-xs text-on-surface-variant items-start">
+                          <span className="text-green-600 font-bold shrink-0">✓</span>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </button>
                 ))}
               </div>
@@ -138,23 +190,32 @@ export default function QuoteEstimator() {
               <h3 className="font-manrope font-semibold text-body-lg mb-4">Step 4: Optional Add-ons</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {Object.entries({
-                  "Ceiling Painting": "+£350/floor",
-                  "Door & Frame Refurb": "+£120/door",
-                  "Radiator Enamelling": "+£85/unit",
-                  "Window Cill Restoration": "+£45/cill"
+                  "Ceiling Painting": "£350 per ceiling",
+                  "Door and Frame Refurb": "£120 per door",
+                  "Radiator Enamelling": "£85 per radiator",
+                  "Window Cill Restoration": "£45 per window cill"
                 }).map(([name, price]) => (
-                  <label key={name} className="flex items-center gap-3 p-4 border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container-low">
-                    <input
-                      type="checkbox"
-                      checked={!!addOns[name]}
-                      onChange={() => toggleAddOn(name)}
-                      className="w-5 h-5 accent-primary border-outline-variant rounded"
-                    />
-                    <div className="flex-1 flex justify-between items-center text-sm">
-                      <span className="font-semibold text-on-surface">{name}</span>
-                      <span className="text-on-surface-variant">{price}</span>
+                  <div key={name} className="flex items-center justify-between p-4 border border-outline-variant rounded-xl bg-white">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-on-surface text-sm">{name}</span>
+                      <span className="text-on-surface-variant text-xs">{price}</span>
                     </div>
-                  </label>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        onClick={() => updateAddOn(name, -1)}
+                        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                      >
+                        -
+                      </button>
+                      <span className="w-4 text-center font-semibold text-sm">{addOns[name] || 0}</span>
+                      <button 
+                        onClick={() => updateAddOn(name, 1)}
+                        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -182,10 +243,10 @@ export default function QuoteEstimator() {
                   <span className="font-semibold text-on-surface">{pkg}</span>
                 </div>
 
-                {Object.entries(addOns).filter(([_, checked]) => checked).map(([name]) => (
+                {Object.entries(addOns).filter(([_, qty]) => qty > 0).map(([name, qty]) => (
                   <div key={name} className="flex justify-between">
-                    <span className="text-on-surface-variant">{name}</span>
-                    <span className="font-semibold text-on-surface">Included</span>
+                    <span className="text-on-surface-variant">{name} x{qty}</span>
+                    <span className="font-semibold text-on-surface">£{addOnPrices[name] * qty}</span>
                   </div>
                 ))}
               </div>
