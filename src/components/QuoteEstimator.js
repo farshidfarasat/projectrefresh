@@ -126,7 +126,7 @@ export default function QuoteEstimator() {
                   { 
                     name: "Refresh", 
                     price: "£1,450+", 
-                    desc: "Standard emulsion, minor filling, 2 coats. Perfect for rental updates.",
+                    desc: "Ideal for rental properties and cosmetic refreshes",
                     features: [
                       "Light surface clean",
                       "Removal of loose/flaky paint",
@@ -138,7 +138,8 @@ export default function QuoteEstimator() {
                   { 
                     name: "Enhanced", 
                     price: "£2,800+", 
-                    desc: "Premium Farrow & Ball paint, wood prep, satin finish trim. POPULAR",
+                    popular: true,
+                    desc: "Most popular choice for homeowners wanting a premium finish",
                     features: [
                       "Light surface clean",
                       "Removal of loose/flaky paint",
@@ -154,7 +155,7 @@ export default function QuoteEstimator() {
                   { 
                     name: "Premium", 
                     price: "£4,900+", 
-                    desc: "Full wall stripping, restorative plastering, heritage detail work.",
+                    desc: "Full restoration for period properties and luxury homes",
                     features: [
                       "Light surface clean",
                       "Removal of loose/flaky paint",
@@ -174,18 +175,23 @@ export default function QuoteEstimator() {
                       "Premium Finish Guarantee"
                     ]
                   }
-                ].map(({ name, price, desc, features }) => (
+                ].map(({ name, price, popular, desc, features }) => (
                   <button
                     key={name}
                     onClick={() => setPkg(name)}
-                    className={`p-6 border rounded-xl text-left transition-colors duration-150 ${pkg === name ? "border-primary bg-surface-container-low" : "border-outline-variant hover:border-on-surface"
+                    className={`p-6 border rounded-xl text-left transition-colors duration-150 w-full flex flex-col ${pkg === name ? "border-primary bg-surface-container-low" : "border-outline-variant hover:border-on-surface"
                       }`}
                   >
-                    <div className="font-bold text-on-surface">{name}</div>
+                    <div className="flex justify-between items-center w-full">
+                      <div className="font-bold text-on-surface">{name}</div>
+                      {popular && (
+                        <span className="text-[10px] font-bold bg-primary text-white px-2 py-0.5 rounded-full tracking-wide">POPULAR</span>
+                      )}
+                    </div>
                     <div className="text-sm font-semibold text-secondary mt-1">{price}</div>
                     <div className="text-sm text-on-surface-variant mt-2">{desc}</div>
                     
-                    <div className={`grid transition-all duration-300 ease-in-out ${pkg === name ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                    <div className={`grid w-full transition-all duration-300 ease-in-out ${pkg === name ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
                       <div className="overflow-hidden">
                         <div className="mt-4 pt-4 border-t border-outline-variant">
                           <ul className="space-y-2">
