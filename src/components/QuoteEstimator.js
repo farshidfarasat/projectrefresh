@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { MdApartment, MdHome, MdDeck, MdCalendarToday, MdCall, MdHelpOutline } from "react-icons/md";
+import { MdApartment, MdHome, MdDeck, MdCalendarToday, MdCall, MdSms } from "react-icons/md";
+import { FaWhatsapp } from "react-icons/fa";
+import BookingModal from "./BookingModal";
+import CallbackModal from "./CallbackModal";
 
 const pricingData = {
   Studio: { Refresh: 950, Enhanced: 1800, Premium: 3200 },
@@ -20,6 +23,8 @@ const addOnPrices = {
 
 export default function QuoteEstimator() {
   const [propertyType, setPropertyType] = useState("Flat");
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isCallbackOpen, setIsCallbackOpen] = useState(false);
   const [size, setSize] = useState("1-2 Bed");
   const [pkg, setPkg] = useState("Enhanced");
   const [addOns, setAddOns] = useState({
@@ -283,23 +288,36 @@ export default function QuoteEstimator() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
-                <button className="w-full flex justify-center items-center gap-2 bg-primary text-white font-semibold py-3.5 rounded-lg hover:bg-gray-800 transition-colors">
-                  <MdCalendarToday className="text-[20px]" />
-                  Book Project Site Visit
-                </button>
-                <button className="w-full flex justify-center items-center gap-2 border border-primary text-primary font-semibold py-3.5 rounded-lg hover:bg-black/5 transition-colors">
-                  <MdCall className="text-[20px]" />
-                  Request Callback
-                </button>
-                <div className="flex gap-3">
-                  <button className="flex-1 flex justify-center items-center gap-2 border border-outline-variant text-on-surface font-semibold py-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <MdHelpOutline className="text-[20px]" />
-                    Question
+              <div className="flex flex-col space-y-3">
+                <div>
+                  <button 
+                    onClick={() => setIsBookingOpen(true)}
+                    className="w-full flex justify-center items-center gap-2 bg-black text-white rounded-lg py-3.5 font-semibold text-base hover:bg-neutral-800 transition-colors cursor-pointer"
+                  >
+                    <MdCalendarToday size={18} />
+                    Book a Visit
                   </button>
-                  <button className="flex-1 flex justify-center items-center gap-2 bg-[#25D366] text-white font-semibold py-3 rounded-lg hover:bg-[#20b858] transition-colors">
+                  <p className="text-xs text-neutral-500 text-center mt-1.5">Free, no obligation · 30 mins</p>
+                </div>
+                <div>
+                  <button 
+                    onClick={() => setIsCallbackOpen(true)}
+                    className="w-full flex justify-center items-center gap-2 bg-white text-black border border-neutral-300 rounded-lg py-3.5 font-semibold text-base hover:bg-neutral-50 transition-colors cursor-pointer"
+                  >
+                    <MdCall size={18} />
+                    Request a Call
+                  </button>
+                  <p className="text-xs text-neutral-500 text-center mt-1.5">We'll call within 1 working hour</p>
+                </div>
+                <div className="flex gap-2">
+                  <a href="sms:+447758690085" className="flex-1 flex justify-center items-center gap-2 bg-neutral-100 text-black border border-neutral-200 rounded-lg py-2.5 text-sm font-medium hover:bg-neutral-200 transition-colors cursor-pointer">
+                    <MdSms size={16} />
+                    Text Us
+                  </a>
+                  <a href="https://wa.me/447758690085" target="_blank" rel="noopener noreferrer" className="flex-1 flex justify-center items-center gap-2 bg-[#25D366] text-white rounded-lg py-2.5 text-sm font-medium hover:bg-[#1FB855] transition-colors cursor-pointer">
+                    <FaWhatsapp size={16} />
                     WhatsApp
-                  </button>
+                  </a>
                 </div>
               </div>
 
@@ -311,6 +329,16 @@ export default function QuoteEstimator() {
 
         </div>
       </div>
+      <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+        quoteSummary={{ type: propertyType, size: size, package: pkg, price: total }}
+      />
+      <CallbackModal
+        isOpen={isCallbackOpen}
+        onClose={() => setIsCallbackOpen(false)}
+        quoteSummary={{ type: propertyType, size: size, package: pkg, price: total }}
+      />
     </section>
   );
 }
